@@ -15,9 +15,6 @@ Type: VDI
 Storage: Dynamically allocated
 Size: 50 GB
 
-👉 40 GB = minimum
-👉 50–60 GB = safe for Docker + k3s
-
 🌐 Network (important for your setup)
 
 Adapter 1:
