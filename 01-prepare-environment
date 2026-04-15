@@ -1,0 +1,294 @@
+🧱 1. VirtualBox VM creation (IMPORTANT BASE SETTINGS)
+🖥️ Name & OS
+Name: ubuntu-devops
+Type: Linux
+Version: Ubuntu (64-bit)
+🧠 Memory
+4096 MB
+⚙️ CPU
+2 cores
+Enable:
+✔ PAE/NX
+✔ VT-x/AMD-V (must be ON in BIOS)
+💽 Disk
+Type: VDI
+Storage: Dynamically allocated
+Size: 50 GB
+
+👉 40 GB = minimum
+👉 50–60 GB = safe for Docker + k3s
+
+🌐 Network (important for your setup)
+
+Adapter 1:
+
+NAT (internet access)
+
+Adapter 2 (optional but recommended):
+
+Host-only Adapter (for stable SSH access from Windows)
+⚡ 2. Performance settings (after VM creation)
+
+Go to:
+
+System → Motherboard
+Boot order: Optical → Hard Disk
+System → Processor
+Enable PAE/NX ✔
+Enable nested paging ✔
+Display
+Video memory: 16–32 MB (doesn’t matter, no GUI)
+🐧 3. Ubuntu Server install flow (fast + correct)
+
+Boot ISO:
+👉 ubuntu-22.04.4-live-server-amd64.iso
+
+🧩 Installer steps (IMPORTANT choices)
+Language
+English (recommended for DevOps consistency)
+Network
+Use default DHCP (NAT)
+Storage
+“Use entire disk” → YES
+No encryption (faster, simpler for learning)
+Profile setup
+Your name: anything
+Server name: devops-vm
+Username: devops
+Password: strong but simple (you’ll SSH often)
+SOFTWARE SELECTION (VERY IMPORTANT)
+
+✔ Enable:
+
+OpenSSH Server
+
+❌ Do NOT select:
+
+Docker (install manually later)
+Kubernetes (install manually later)
+any snaps beyond default
+🚀 4. First boot optimization (after install)
+
+Login and run:
+
+sudo apt update && sudo apt upgrade -y
+Install core tools immediately:
+sudo apt install -y curl wget git vim unzip ca-certificates
+Install build essentials (important for Java + Docker builds)
+sudo apt install -y build-essential
+🔐 5. Enable SSH access (critical for your workflow)
+
+Check SSH:
+
+sudo systemctl status ssh
+
+If needed:
+
+sudo apt install -y openssh-server
+🌐 6. Access VM from Windows (best practice)
+
+Find IP:
+
+ip a
+
+Then from Windows:
+
+ssh devops@<VM-IP>
+
+👉 OR use VS Code “Remote SSH” (highly recommended)
+
+🐳 7. DOCKER install (next step after base system)
+sudo apt install -y docker.io
+sudo usermod -aG docker $USER
+
+Log out and back in.
+
+☸️ 8. KUBERNETES recommendation (VERY IMPORTANT)
+
+For your 8 GB system:
+
+BEST choice:
+
+👉 k3s (lightweight Kubernetes)
+
+Install:
+
+curl -sfL https://get.k3s.io | sh -
+
+Check:
+
+sudo k3s kubectl get nodes
+🧠 9. Final architecture (what you are building)
+Windows Host
+   ↓ (VirtualBox)
+Ubuntu Server (4GB RAM)
+   ↓
+Docker
+   ↓
+k3s Kubernetes
+   ↓
+Java Spring Boot Apps
+   ↓
+CI/CD simulation
+⚠️ Critical rules (don’t ignore)
+
+❌ Don’t install GUI
+❌ Don’t run Prometheus + Grafana early
+❌ Don’t oversize VM RAM
+❌ Don’t install Minikube (too heavy for your setup)
+
+🎯 Result of this setup
+
+After this you will be able to:
+
+deploy Java apps like in real companies
+simulate production failures
+practice Kubernetes debugging
+prepare for DevOps / Platform interviews
+🚀 If you want next step
+
+I can guide you through:
+
+👉 first real project setup (Java + Docker + Kubernetes + Helm)
+This is the thing that will actually improve your interview success rate quickly.
+
+🧱 1. Install IntelliJ IDEA on Windows
+
+Download:
+
+IntelliJ IDEA Community Edition (free)
+
+During install:
+
+✔ Add to PATH
+✔ Add “Open Folder as Project”
+✔ Install JDK (or install manually later)
+☕ 2. Install Java on Windows (IMPORTANT)
+
+Install:
+
+JDK 17 or 21
+
+Verify:
+
+java -version
+🧠 3. Your working model (important concept)
+
+You will:
+
+write code in IntelliJ (Windows)
+push code via Git OR copy via SSH
+run it inside Ubuntu VM
+
+👉 Separation of concerns = clean workflow
+
+🔗 4. Connect IntelliJ → Ubuntu VM (best method)
+Option A (BEST): SSH + Git workflow
+Step 1 — install Git in VM
+sudo apt install -y git
+Step 2 — create project locally (IntelliJ)
+New Project → Maven → Java
+Group: com.example
+Artifact: demo-app
+Step 3 — push to Git (GitHub / Bitbucket)
+
+From IntelliJ:
+
+VCS → Enable Git
+Commit + push
+Step 4 — pull in VM
+git clone <your-repo>
+cd your-project
+Option B (faster iteration): SSH directly
+
+From Windows terminal:
+
+ssh devops@<VM-IP>
+
+You can:
+
+build
+run
+debug logs
+⚙️ 5. Build Java app from IntelliJ
+
+Inside IntelliJ terminal:
+
+mvn clean package
+
+This creates:
+
+target/app.jar
+🐳 6. Deploy to VM (simple method)
+Option 1: SCP (quick)
+scp target/app.jar devops@<VM-IP>:/home/devops/
+Option 2: Git pull (cleaner)
+commit → push
+in VM: git pull
+🚀 7. Run app in VM
+java -jar app.jar
+🐳 8. Next step (Docker — very important)
+
+Create Dockerfile:
+
+FROM openjdk:17-jdk-slim
+COPY target/app.jar app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
+
+Build in VM:
+
+docker build -t my-app .
+docker run -p 8080:8080 my-app
+☸️ 9. Later: Kubernetes deployment
+
+From VM:
+
+kubectl apply -f deployment.yaml
+🧠 10. BEST upgrade (highly recommended)
+
+Use:
+👉 VS Code Remote SSH OR IntelliJ Ultimate (Remote Dev)
+
+But for now:
+👉 Git + SSH is enough
+
+⚠️ Common mistakes (avoid these)
+
+❌ running everything inside IntelliJ
+❌ installing IntelliJ in VM
+❌ not using Git
+❌ copying files manually every time
+
+🎯 Your final workflow
+IntelliJ (Windows)
+   ↓
+Git push
+   ↓
+Ubuntu VM (pull)
+   ↓
+Build (Maven)
+   ↓
+Run (Java / Docker / Kubernetes)
+💡 Why this is powerful
+
+You are simulating:
+
+developer environment (local IDE)
+server environment (Linux VM)
+deployment pipeline
+
+👉 This is exactly what companies expect.
+
+🚀 If you want next step
+
+I can give you:
+
+👉 your first Spring Boot project (step-by-step)
+including:
+
+code
+structure
+Docker
+Kubernetes deployment
+
+This will accelerate your transition massively.
