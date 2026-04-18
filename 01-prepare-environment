@@ -1,4 +1,12 @@
-🧱 1. VirtualBox VM creation (IMPORTANT BASE SETTINGS)
+1. Install IntelliJ
+I installed IntelliJ CE with 30 days trial for Un
+Java SDK: Amazon Corretto 17.0.18.
+I faced issue that I couldn't run my first program because I needed to select
+the folder containing the package tree of these classes and then right-click
+and choose "Mark Directory as -> Source Root".
+
+
+🧱 2. VirtualBox VM creation
 🖥️ Name & OS
 Name: ubuntu-devops
 Type: Linux
@@ -15,7 +23,7 @@ Type: VDI
 Storage: Dynamically allocated
 Size: 50 GB
 
-🌐 Network (important for your setup)
+🌐 Network
 
 Adapter 1:
 
@@ -50,22 +58,19 @@ Storage
 No encryption (faster, simpler for learning)
 Profile setup
 Your name: anything
-Server name: devops-vm
-Username: devops
+Server name: ubuntu-devops
+Username: ubuntu
 Password: strong but simple (you’ll SSH often)
+
 SOFTWARE SELECTION (VERY IMPORTANT)
-
 ✔ Enable:
-
 OpenSSH Server
-
 ❌ Do NOT select:
-
 Docker (install manually later)
 Kubernetes (install manually later)
 any snaps beyond default
-🚀 4. First boot optimization (after install)
 
+🚀 4. First boot optimization (after install)
 Login and run:
 
 sudo apt update && sudo apt upgrade -y
